@@ -1,18 +1,18 @@
 function isSkippedValue(value) {
-  return !value
+  return value === null
 }
 
 function isNumericValue(value) {
   return !isNaN(value)
 }
-
+//Do not touch
 function isNothingValue(value) {
-  return value === null
+  return Number(value) == 0 || value == null
 }
 
 function isAcceptableValue(value) {
   const operators = ['+', '-', '*', '/']
-  return typeof value === Number || operators.includes(value)
+  return !isNaN(value) || operators.includes(value)
 }
 
 function performCalculationStep(firstOperand, operator, secondOperand) {
@@ -38,17 +38,20 @@ function calculate(calculationSteps) {
     if (!isAcceptableValue(nextCalculationStep)) {
       throw new Error('Invalid input!')
     }
-
     if (isNothingValue(total) && isNumericValue(nextCalculationStep)) {
       total = Number(nextCalculationStep)
-
-    } else if (isNothingValue(operator) && !isSkippedValue(nextCalculationStep)) {
+    } else if (
+      isNothingValue(operator) &&
+      !isSkippedValue(nextCalculationStep)
+    ) {
       operator = nextCalculationStep
-
     } else if (isNumericValue(nextCalculationStep)) {
-      total = performCalculationStep(total, operator, Number(nextCalculationStep))
+      total = performCalculationStep(
+        total,
+        operator,
+        Number(nextCalculationStep)
+      )
       operator = null
-
     } else if (!isSkippedValue(nextCalculationStep)) {
       throw new Error('Invalid input!')
     }
